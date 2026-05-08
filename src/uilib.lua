@@ -535,6 +535,231 @@ function uilib:Tab(tabName, tabIco)
 
         currentOpen = tabName
     end)
+
+    local elements = {}
+
+    function elements:Unsupported()
+        local NotSupportedMain = Instance.new("Frame")
+        NotSupportedMain.BackgroundTransparency = 1
+        NotSupportedMain.Name = "NotSupportedMain"
+        NotSupportedMain.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        NotSupportedMain.Size = UDim2.new(0, 390, 0, 222)
+        NotSupportedMain.BorderSizePixel = 0
+        NotSupportedMain.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        NotSupportedMain.Parent = SectionContainer
+
+        local ContentFrame = Instance.new("Frame")
+        ContentFrame.Name = "ContentFrame"
+        ContentFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        ContentFrame.Size = UDim2.new(1, 0, 0.9459459185600281, 0)
+        ContentFrame.BorderSizePixel = 0
+        ContentFrame.BackgroundColor3 = Color3.fromRGB(57, 61, 81)
+        ContentFrame.Parent = NotSupportedMain
+
+        local UICorner = Instance.new("UICorner")
+        UICorner.Parent = ContentFrame
+
+        local UIStroke = Instance.new("UIStroke")
+        UIStroke.Color = Color3.fromRGB(130, 139, 185)
+        UIStroke.BorderStrokePosition = Enum.BorderStrokePosition.Inner
+        UIStroke.Parent = ContentFrame
+
+        local TabTitle = Instance.new("TextLabel")
+        TabTitle.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+        TabTitle.TextStrokeColor3 = Color3.fromRGB(255, 255, 255)
+        TabTitle.AnchorPoint = Vector2.new(0.5, 0.5)
+        TabTitle.TextSize = 14
+        TabTitle.Size = UDim2.new(0.8721153736114502, 0, 0.14532120525836945, 0)
+        TabTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+        TabTitle.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        TabTitle.Text = "This game isn't supported!"
+        TabTitle.Name = "TabTitle"
+        TabTitle.TextWrapped = true
+        TabTitle.BackgroundTransparency = 1
+        TabTitle.TextXAlignment = Enum.TextXAlignment.Left
+        TabTitle.Position = UDim2.new(0.48110663890838623, 0, 0.12745361030101776, 0)
+        TabTitle.BorderSizePixel = 0
+        TabTitle.TextScaled = true
+        TabTitle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        TabTitle.Parent = ContentFrame
+        applyFont(
+            TabTitle,
+            "georgia",
+            Enum.FontWeight.Regular,
+            Enum.FontStyle.Normal
+        )
+
+        local TabTitle = Instance.new("TextLabel")
+        TabTitle.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+        TabTitle.TextStrokeColor3 = Color3.fromRGB(255, 255, 255)
+        TabTitle.AnchorPoint = Vector2.new(0.5, 0.5)
+        TabTitle.TextSize = 14
+        TabTitle.Size = UDim2.new(0.8721153736114502, 0, 0.11674977093935013, 0)
+        TabTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+        TabTitle.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        TabTitle.Text = "You can either:"
+        TabTitle.Name = "TabTitle"
+        TabTitle.TextWrapped = true
+        TabTitle.BackgroundTransparency = 1
+        TabTitle.TextXAlignment = Enum.TextXAlignment.Left
+        TabTitle.Position = UDim2.new(0.48110663890838623, 0, 0.3036440908908844, 0)
+        TabTitle.BorderSizePixel = 0
+        TabTitle.TextScaled = true
+        TabTitle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        TabTitle.Parent = ContentFrame
+        applyFont(
+            TabTitle,
+            "georgia",
+            Enum.FontWeight.Regular,
+            Enum.FontStyle.Normal
+        )
+
+        local CloseBPButton = Instance.new("TextButton")
+        CloseBPButton.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+        CloseBPButton.TextStrokeColor3 = Color3.fromRGB(255, 255, 255)
+        CloseBPButton.AnchorPoint = Vector2.new(0.5, 0.5)
+        CloseBPButton.TextSize = 14
+        CloseBPButton.Size = UDim2.new(0.8721153736114502, 0, 0.09770215302705765, 0)
+        CloseBPButton.TextColor3 = Color3.fromRGB(89, 205, 255)
+        CloseBPButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        CloseBPButton.Text = "Close Brainrot Police"
+        CloseBPButton.Name = "CloseBPButton"
+        CloseBPButton.TextWrapped = true
+        CloseBPButton.Selectable = false
+        CloseBPButton.BackgroundTransparency = 1
+        CloseBPButton.TextXAlignment = Enum.TextXAlignment.Left
+        CloseBPButton.Position = UDim2.new(0.48110663890838623, 0, 0.6369774341583252, 0)
+        CloseBPButton.BorderSizePixel = 0
+        CloseBPButton.TextScaled = true
+        CloseBPButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        CloseBPButton.Parent = ContentFrame
+        applyFont(
+            CloseBPButton,
+            "georgia",
+            Enum.FontWeight.Regular,
+            Enum.FontStyle.Normal
+        )
+
+        local GameslistButton = Instance.new("TextButton")
+        GameslistButton.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+        GameslistButton.TextStrokeColor3 = Color3.fromRGB(255, 255, 255)
+        GameslistButton.AnchorPoint = Vector2.new(0.5, 0.5)
+        GameslistButton.TextSize = 14
+        GameslistButton.Size = UDim2.new(0.8721153736114502, 0, 0.09770215302705765, 0)
+        GameslistButton.TextColor3 = Color3.fromRGB(89, 205, 255)
+        GameslistButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        GameslistButton.Text = "Check out our supported games list"
+        GameslistButton.Name = "GameslistButton"
+        GameslistButton.TextWrapped = true
+        GameslistButton.Selectable = false
+        GameslistButton.BackgroundTransparency = 1
+        GameslistButton.TextXAlignment = Enum.TextXAlignment.Left
+        GameslistButton.Position = UDim2.new(0.48110663890838623, 0, 0.5369774103164673, 0)
+        GameslistButton.BorderSizePixel = 0
+        GameslistButton.TextScaled = true
+        GameslistButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        GameslistButton.Parent = ContentFrame
+        applyFont(
+            GameslistButton,
+            "georgia",
+            Enum.FontWeight.Regular,
+            Enum.FontStyle.Normal
+        )
+
+        local SuggestButton = Instance.new("TextButton")
+        SuggestButton.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+        SuggestButton.TextStrokeColor3 = Color3.fromRGB(255, 255, 255)
+        SuggestButton.AnchorPoint = Vector2.new(0.5, 0.5)
+        SuggestButton.TextSize = 14
+        SuggestButton.Size = UDim2.new(0.8721153736114502, 0, 0.09770215302705765, 0)
+        SuggestButton.TextColor3 = Color3.fromRGB(89, 205, 255)
+        SuggestButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        SuggestButton.Text = "Suggest for this game to be added"
+        SuggestButton.Name = "SuggestButton"
+        SuggestButton.TextWrapped = true
+        SuggestButton.Selectable = false
+        SuggestButton.BackgroundTransparency = 1
+        SuggestButton.TextXAlignment = Enum.TextXAlignment.Left
+        SuggestButton.Position = UDim2.new(0.48110663890838623, 0, 0.43697741627693176, 0)
+        SuggestButton.BorderSizePixel = 0
+        SuggestButton.TextScaled = true
+        SuggestButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        SuggestButton.Parent = ContentFrame
+        applyFont(
+            SuggestButton,
+            "georgia",
+            Enum.FontWeight.Regular,
+            Enum.FontStyle.Normal
+        )
+
+        local BottomTing = Instance.new("TextLabel")
+        BottomTing.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+        BottomTing.Active = true
+        BottomTing.TextStrokeColor3 = Color3.fromRGB(255, 255, 255)
+        BottomTing.AnchorPoint = Vector2.new(0.5, 0.5)
+        BottomTing.TextSize = 14
+        BottomTing.Size = UDim2.new(0.8721153736114502, 0, 0.09770215302705765, 0)
+        BottomTing.TextColor3 = Color3.fromRGB(255, 255, 255)
+        BottomTing.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        BottomTing.Text = "Click your desired option."
+        BottomTing.Name = "BottomTing"
+        BottomTing.TextWrapped = true
+        BottomTing.BackgroundTransparency = 1
+        BottomTing.TextXAlignment = Enum.TextXAlignment.Left
+        BottomTing.Position = UDim2.new(0.48110663890838623, 0, 0.9036440849304199, 0)
+        BottomTing.BorderSizePixel = 0
+        BottomTing.TextScaled = true
+        BottomTing.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        BottomTing.Parent = ContentFrame
+        applyFont(
+            BottomTing,
+            "georgia",
+            Enum.FontWeight.Regular,
+            Enum.FontStyle.Italic
+        )
+
+        SuggestButton.MouseButton1Click:Connect(function()
+            setclipboard("https://discord.gg/vaehz")
+            SuggestButton.Text = "Copied to Clipboard!"
+            task.wait(2)
+            SuggestButton.Text = "Suggest for this game to be added"
+        end)
+
+        CloseBPButton.MouseButton1Click:Connect(function()
+            ScreenGui:Destroy()
+        end)
+
+        GameslistButton.MouseButton1Click:Connect(function()
+            TweenService:Create(
+                SectionCanvas,
+                TweenInfo.new(
+                    0.5
+                ),
+                {
+                    GroupTransparency = 1
+                }
+            ):Play()
+
+            TweenService:Create(
+                SectionDock["Games List"],
+                TweenInfo.new(
+                    0.5
+                ),
+                {
+                    GroupTransparency = 0
+                }
+            ):Play()
+
+            task.wait(0.5)
+
+            SectionCanvas.Interactable = false
+            SectionDock["Games List"].Interactable = true
+
+            currentOpen = "Games List"
+        end)
+    end
+
+    return elements
 end
 
 return uilib
