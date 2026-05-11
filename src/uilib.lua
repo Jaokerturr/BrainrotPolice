@@ -951,7 +951,7 @@ function uilib:Tab(tabName, tabIco)
         elementtitle.Size = UDim2.new(0.5464974641799927, 0, 0.4454859495162964, 0)
         elementtitle.TextColor3 = Color3.fromRGB(255, 255, 255)
         elementtitle.BorderColor3 = Color3.fromRGB(0, 0, 0)
-        elementtitle.Text = "ts a textbox"
+        elementtitle.Text = elementtitle
         elementtitle.Name = "elementtitle"
         elementtitle.TextWrapped = true
         elementtitle.BackgroundTransparency = 1
@@ -1021,5 +1021,27 @@ function uilib:Tab(tabName, tabIco)
 
     return elements
 end
+
+local dragging, dragInput, dragStart, startPos
+
+Frame.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		dragging = true
+		dragStart = input.Position
+		startPos = Frame.Position
+
+		input.Changed:Connect(function()
+			if input.UserInputState == Enum.UserInputState.End then
+				dragging = false
+			end
+		end)
+	end
+end)
+
+Frame.InputChanged:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseMovement then
+		dragInput = input
+	end
+end)
 
 return uilib
