@@ -26,7 +26,7 @@ return function(section)
             local con
             con = runservice.RenderStepped:Connect(function()
                 local pp = plr.Character.PrimaryPart
-                pp.Position = Vector3.new(0, pp.Position.Y, pp.Position.Z)
+                plr.Character:MoveTo(Vector3.new(0, pp.Position.Y, pp.Position.Z))
                 if not getgenv().FarmBrainrots then
                     con:Disconnect()
                 end
