@@ -12,6 +12,7 @@ return function(section)
     local function grabem(where)
         local char = plr.Character
         for _, br in pairs(where:GetChildren()) do
+            if not br.PrimaryPart then continue end
             char:MoveTo(br.PrimaryPart.Position)
             task.wait(0.2)
             fireproximityprompt(br.PrimaryPart.ProximityPrompt)
