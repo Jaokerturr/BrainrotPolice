@@ -36,7 +36,10 @@ return function(section)
                             plr.Character:MoveTo(pos)
                             task.wait()
                             repeat fireproximityprompt(v.ProximityPrompt) task.wait() until v:FindFirstChild("WeldConstraint")
-                            plr.Character:MoveTo(Vector3.new(-54, 31, -2196))
+                            local Event = game:GetService("ReplicatedStorage").ModifiedPackages.Packet.RemoteEvent
+                            Event:FireServer(
+                                buffer.fromstring("\x8D")
+                            )
 
                             task.wait(0.5)
                         end
