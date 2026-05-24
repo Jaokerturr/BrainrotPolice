@@ -11,46 +11,6 @@ return function(section)
 
     getgenv().AutoMoney = false
     getgenv().AutoRebirth = false
-    getgenv().FarmRots = false
-    getgenv().FarmZone = 1
-
-    elements:Textbox("Farm Zone (1-15)", section, function(v)
-        getgenv().FarmZone = tonumber(v)
-    end)
-
-    elements:Toggle("FarmRots", section, function(v)
-        if v then
-            getgenv().FarmRots = true
-
-            while getgenv().FarmRots do
-                local spot = workspace.GameArea.Interactables.BrainrotSpawns[tostring(getgenv().FarmZone)]:FindFirstChildOfClass("Part")
-                local halfSize = spot.Size * 0.5
-
-                for _,v in pairs(brainrotFold:GetChildren()) do
-                    if v.PrimaryPart then
-                        local pos = v.PrimaryPart.Position
-                        local localPos = spot.CFrame:PointToObjectSpace(pos)
-
-                        if math.abs(localPos.X) <= halfSize.X
-                        and math.abs(localPos.Z) <= halfSize.Z then
-                            plr.Character:MoveTo(pos)
-                            task.wait()
-                            repeat fireproximityprompt(v.ProximityPrompt) task.wait() until v:FindFirstChild("WeldConstraint")
-                            local Event = game:GetService("ReplicatedStorage").ModifiedPackages.Packet.RemoteEvent
-                            Event:FireServer(
-                                buffer.fromstring("\x8D")
-                            )
-
-                            task.wait(0.5)
-                        end
-                    end
-                end
-                task.wait(1)
-            end
-        else
-            getgenv().FarmRots = false
-        end
-    end)
 
     elements:Toggle("Auto Money", section, function(v)
         if v then
