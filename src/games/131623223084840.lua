@@ -84,10 +84,9 @@ return function(section)
                         moveTo(br.Root.Position)
 
                         repeat
-                            if not getgenv().Farming then return end
                             fireproximityprompt(br.Root.TakePrompt)
                             task.wait()
-                        until not br.Parent or not plr.Character:FindFirstChild("RenderedBrainrot")
+                        until plr.Character:FindFirstChild("RenderedBrainrot") or not br or br.Parent ~= folder
                         task.wait()
                         moveTo(Vector3.new(121, 3, 19))
                     end
