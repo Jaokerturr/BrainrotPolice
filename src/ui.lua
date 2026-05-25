@@ -3,7 +3,7 @@ local getexec = identifyexecutor
 local coregui = game:GetService("CoreGui")
 local userinputservice = game:GetService("UserInputService")
 local httpservice = game:GetService("HttpService")
-local tpservice = game:GetService("TeleportService")
+local exservice = game:GetService("ExperienceService")
 local tweenservice = game:GetService("TweenService")
 
 local ui = import("rbxassetid://75281832304062")
@@ -150,7 +150,7 @@ end
 
 for _, g in ipairs(gameList) do
     elements:Button(g.status .. " " .. g["game"], Sections.GamesList.Container, function()
-        tpservice:Teleport(g.id)
+        exservice:LaunchExperience({placeId = g.id})
     end)
 end
 
