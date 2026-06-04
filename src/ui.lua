@@ -139,18 +139,30 @@ local gameList = httpservice:JSONDecode(game:HttpGet(getgitpath("src").. "gamesl
 local creditsList = httpservice:JSONDecode(game:HttpGet(getgitpath("src").. "credits.json"))
 local elements = loadstring(game:HttpGet(getgitpath("src").."elements.lua"))()
 if not ok or #gamePath == 0 or gamePath == "404: Not Found" then
-    elements:Unsupported(Sections.Game.Container, function()
-        if CurSection then
-            CurSection.TabBtn.BackgroundTransparency = 1
-            CurSection.Container:TweenPosition(UDim2.new(0.5, 0, 1, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2)
+    local handledLocally = false
+
+    if getgenv().FileScripts then
+        if isfile("BrainrotPolice/"..tostring(game.PlaceId)..".lua") then
+            local gameModule = loadstring(readfile("BrainrotPolice/"..tostring(game.PlaceId)..".lua"))()
+            gameModule(Sections.Game.Container)
+            handledLocally = true
         end
+    end
 
-        Sections.GamesList.TabBtn.BackgroundTransparency = 0
-        Sections.GamesList.Container:TweenPosition(UDim2.new(0.5, 0, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2)
-        Sections.GamesList.Container.Visible = true
+    if not handledLocally then
+        elements:Unsupported(Sections.Game.Container, function()
+            if CurSection then
+                CurSection.TabBtn.BackgroundTransparency = 1
+                CurSection.Container:TweenPosition(UDim2.new(0.5, 0, 1, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2)
+            end
 
-        CurSection = Sections.GamesList
-    end)
+            Sections.GamesList.TabBtn.BackgroundTransparency = 0
+            Sections.GamesList.Container:TweenPosition(UDim2.new(0.5, 0, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2)
+            Sections.GamesList.Container.Visible = true
+
+            CurSection = Sections.GamesList
+        end)
+    end
 else
     local gameModule = loadstring(gamePath)()
     gameModule(Sections.Game.Container)
