@@ -5,6 +5,14 @@ For a more in depth explanation and rundown of this script, I recommend you chec
 local env = getgenv()
 
 if not isfolder("BrainrotPolice") then makefolder("BrainrotPolice") end
+if not isfile("BrainrotPolice/Config.json") then
+    writefile("BrainrotPolice/Config.json", game:GetService("HttpService"):JSONEncode({
+        settings = {
+            auto_rejoin_on_kick = false,
+            disable_3d_rendering = false
+        }
+    }))
+end
 
 function env.import(id)
     return game:GetObjects(id)[1]
@@ -26,3 +34,7 @@ game:GetService("GuiService").ErrorMessageChanged:Connect(function()
 end)
 
 loadstring(game:HttpGet(getgitpath("src").."ui.lua"))()
+
+if queue_on_teleport then
+    queue_on_teleport('loadstring(game:HttpGet("https://raw.githubusercontent.com/IcantAffordSynapse/BrainrotPolice/refs/heads/main/src/init.lua"))()')
+end
