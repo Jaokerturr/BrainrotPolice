@@ -4,7 +4,6 @@ return function(section, data)
     local elements = loadstring(game:HttpGet(getgitpath("src").."elements.lua"))()
 
     local brainrotFold = workspace.Camera.BrainrotContainer
-    local wallDurabilities = require(game:GetService("ReplicatedStorage").Modules.Constants.WallDurabilities)
     local plr = game:GetService("Players").LocalPlayer
 
     local powerAmt = plr.PlayerGui.HUD.BottomRight.Stats.Container.Power.CollectedText
