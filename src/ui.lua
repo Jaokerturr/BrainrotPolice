@@ -19,6 +19,21 @@ local TabList = MainFrame.tablist
 
 local HideButton = Topbar.hidebtn
 
+local CloseButton = Instance.new("TextButton")
+CloseButton.Name = "closebtn"
+CloseButton.Text = "X"
+CloseButton.Size = HideButton.Size
+CloseButton.Position = UDim2.new(HideButton.Position.X.Scale, HideButton.Position.X.Offset - 25, HideButton.Position.Y.Scale, HideButton.Position.Y.Offset)
+CloseButton.BackgroundColor3 = Color3.fromRGB(220, 53, 69)
+CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseButton.Font = Enum.Font.GothamBold
+CloseButton.TextSize = 12
+CloseButton.BorderSizePixel = 0
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 4)
+corner.Parent = CloseButton
+CloseButton.Parent = Topbar
+
 local Sections = {
     Home = {
         TabBtn = TabList.HomeTab,
@@ -91,6 +106,11 @@ ToggleButton.MouseButton1Click:Connect(function()
     ToggleButton.Visible = false
 end)
 
+CloseButton.MouseButton1Click:Connect(function()
+    getgenv().Farming = false
+    ui:Destroy()
+end)
+
 local dragging = false
 local dragInput, mousePos, framePos
 
@@ -131,7 +151,6 @@ Sections.Home.Container.discan.Text = Sections.Home.Container.discan.Text:gsub("
 Sections.Home.Container.ythead.Text = Sections.Home.Container.ythead.Text:gsub("redacted", "YouTube")
 Sections.Home.Container.execLabel.Text = "Executor: " .. getexec()
 Sections.Home.Container.versionLabel.Text = "Version: 0.32 BETA"
-
 
 local ok, gamePath = pcall(function()
     return game:HttpGet(getgitpath("games") .. tostring(game.PlaceId) .. ".lua")
