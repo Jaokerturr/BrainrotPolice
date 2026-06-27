@@ -21,7 +21,7 @@ local HideButton = Topbar.hidebtn
 -- Cloning the exact button so the font/style is identical
 local Separator = HideButton:Clone()
 Separator.Name = "uiseparator"
-Separator.Text = "|"
+Separator.Text = " "
 Separator.Size = UDim2.new(0, 15, HideButton.Size.Y.Scale, HideButton.Size.Y.Offset)
 Separator.Position = UDim2.new(HideButton.Position.X.Scale, HideButton.Position.X.Offset - 25, HideButton.Position.Y.Scale, HideButton.Position.Y.Offset)
 Separator.Parent = Topbar
