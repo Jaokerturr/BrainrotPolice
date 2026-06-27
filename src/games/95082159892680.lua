@@ -1,8 +1,8 @@
 return function(section, data)
-    print("reached")
     local elements = loadstring(game:HttpGet(getgitpath("src").."elements.lua"))()
     local env = getgenv()
     local plr = game:GetService("Players").LocalPlayer
+    local PathfindingService = game:GetService("PathfindingService")
 
     env.Farming = false
     env.WinStage = 1
@@ -14,8 +14,6 @@ return function(section, data)
     setdata.fastmode = setdata.fastmode or false
     data[tostring(game.PlaceId)] = setdata
     writefile("BrainrotPolice/Config.json", game:GetService("HttpService"):JSONEncode(data))
-
-    print("yeah")
 
     elements:Label("Currently supports up to 14 stages - By Jay", section)
 
@@ -32,12 +30,6 @@ return function(section, data)
         getgenv().setconfig("fastmode", v)
     end)
 
-    local part = Instance.new("Part")
-    part.Anchored = true
-    part.Size = Vector3.new(10, 1, 546)
-    part.Position = Vector3.new(1, 75, 1090)
-    part.Parent = workspace
-
     elements:Toggle("Autofarm", section, env.Farming, function(v)
         env.Farming = v
         getgenv().setconfig("farming", v)
@@ -46,8 +38,7 @@ return function(section, data)
 
         spawn(function()
             while env.Farming do
-                local args = { "Walking" }
-                game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("UpdateSpeed"):FireServer(unpack(args))
+                game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("UpdateSpeed"):FireServer("Walking")
                 task.wait()
             end
         end)
@@ -57,48 +48,46 @@ return function(section, data)
                 local char = plr.Character
                 local head = char and char:FindFirstChild("Head")
                 local hrp = char and char:FindFirstChild("HumanoidRootPart")
-                if not head or not hrp then return end
-
-                local currentStageNum = env.WinStage
-                local targetStageName = "Stage" .. tostring(currentStageNum + 1)
-                local winBlockName = "WinBlock" .. tostring(currentStageNum)
+                local humanoid = char and char:FindFirstChild("Humanoid")
                 
+                if not hrp or not humanoid then return end
+
+                local targetStageName = "Stage" .. tostring(env.WinStage + 1)
+                local winBlockName = "WinBlock" .. tostring(env.WinStage)
                 local stageFolder = workspace:FindFirstChild("Structure") and workspace.Structure:FindFirstChild(targetStageName)
+                
                 if stageFolder then
                     local winBlock = stageFolder:FindFirstChild(winBlockName)
-                    if not winBlock then
-                        for _, child in ipairs(stageFolder:GetChildren()) do
-                            if child.Name:find("WinBlock") then
-                                winBlock = child
-                                break
+                    
+                    -- Conditional Logic: Walking for 1-5, TouchInterest for 6+
+                    if env.WinStage <= 5 then
+                        local path = PathfindingService:CreatePath({AgentRadius = 3, AgentHeight = 6, AgentCanJump = true})
+                        path:ComputeAsync(hrp.Position, winBlock.Position)
+                        if path.Status == Enum.PathStatus.Success then
+                            for _, waypoint in ipairs(path:GetWaypoints()) do
+                                if not env.Farming then break end
+                                if waypoint.Action == Enum.PathWaypointAction.Jump then humanoid.Jump = true end
+                                humanoid:MoveTo(waypoint.Position)
+                                humanoid.MoveToFinished:Wait()
                             end
                         end
-                    end
-
-                    if winBlock then
-                        if firetouchinterest then
-                            -- Best method: Tricks the game into thinking your head touched it without moving you
+                    else
+                        -- TouchInterest Method for 6+
+                        if firetouchinterest and head and winBlock then
                             firetouchinterest(head, winBlock, 0)
                             task.wait(0.05)
                             firetouchinterest(head, winBlock, 1)
-                        else
-                            -- Fallback method: If firetouchinterest fails, bobs you up and down quickly
-                            local originalCFrame = hrp.CFrame
-                            hrp.CFrame = winBlock.CFrame * CFrame.new(0, 1, 0)
+                        elseif hrp and winBlock then
+                            local oldPos = hrp.CFrame
+                            hrp.CFrame = winBlock.CFrame
                             task.wait(0.05)
-                            hrp.CFrame = winBlock.CFrame * CFrame.new(0, -1, 0)
-                            task.wait(0.05)
-                            hrp.CFrame = originalCFrame
+                            hrp.CFrame = oldPos
                         end
                     end
                 end
             end)
             
-            if env.FastMode then
-                task.wait(0.1)
-            else
-                task.wait(1.5)
-            end
+            task.wait(env.FastMode and 0.1 or 1.5)
         end
     end)
 end
