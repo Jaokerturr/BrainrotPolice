@@ -1,10 +1,9 @@
--- +1 speed keyboard escape
-
 return function(section, data)
     print("reached")
     local elements = loadstring(game:HttpGet(getgitpath("src").."elements.lua"))()
     local env = getgenv()
     local plr = game:GetService("Players").LocalPlayer
+    local PathfindingService = game:GetService("PathfindingService")
 
     env.Farming = false
     env.WinStage = 1
@@ -17,7 +16,7 @@ return function(section, data)
 
     print("yeah")
 
-    elements:Label("Currently supports up to 5 stages.", section)
+    elements:Label("supports all stages - By Jay", section)
 
     elements:Textbox("Win Stage", section, tostring(env.WinStage), function(v)
         env.WinStage = tonumber(v)
@@ -48,57 +47,92 @@ return function(section, data)
 
         while env.Farming do
             pcall(function()
-                plr.Character.Humanoid:MoveTo(Vector3.new(2, 9, 282))
-                plr.Character.Humanoid.MoveToFinished:Wait()
-                if env.WinStage == 1 then
-                    plr.Character.Humanoid:MoveTo(workspace.Structure.Stage2.WinBlock1.Position)
-                    plr.Character.Humanoid.MoveToFinished:Wait()
+                local currentStageNum = env.WinStage
+                local targetStageName = "Stage" .. tostring(currentStageNum + 1)
+                local winBlockName = "WinBlock" .. tostring(currentStageNum)
+                
+                local structure = workspace:FindFirstChild("Structure")
+                if not structure then 
+                    task.wait(1) 
+                    return 
+                end
+                
+                local stageFolder = structure:FindFirstChild(targetStageName)
+                if not stageFolder then
+                    warn("Target stage folder not found: " .. targetStageName)
                     task.wait(1)
                     return
                 end
-                plr.Character.Humanoid:MoveTo(Vector3.new(70, 9, 398))
-                plr.Character.Humanoid.MoveToFinished:Wait()
-                plr.Character.Humanoid:MoveTo(Vector3.new(1, 9, 505))
-                plr.Character.Humanoid.MoveToFinished:Wait()
-                if env.WinStage == 2 then
-                    plr.Character.Humanoid:MoveTo(workspace.Structure.Stage3.WinBlock2.Position)
-                    plr.Character.Humanoid.MoveToFinished:Wait()
-                    task.wait(1)
-                    return
+                
+                local winBlock = stageFolder:FindFirstChild(winBlockName)
+                if not winBlock then
+                    for _, child in ipairs(stageFolder:GetChildren()) do
+                        if child.Name:find("WinBlock") then
+                            winBlock = child
+                            break
+                        end
+                    end
                 end
-
-                plr.Character.Humanoid:MoveTo(Vector3.new(19, 9, 541))
-                plr.Character.Humanoid.MoveToFinished:Wait()
-                plr.Character.Humanoid:MoveTo(Vector3.new(20, 77, 754))
-                plr.Character.Humanoid.MoveToFinished:Wait()
-                if env.WinStage == 3 then
-                    plr.Character.Humanoid:MoveTo(workspace.Structure.Stage4.WinBlock3.Position)
-                    plr.Character.Humanoid.MoveToFinished:Wait()
+                
+                if winBlock and winBlock:IsA("BasePart") and plr.Character and plr.Character:FindFirstChild("Humanoid") and plr.Character:FindFirstChild("HumanoidRootPart") then
+                    local humanoid = plr.Character.Humanoid
+                    local hrp = plr.Character.HumanoidRootPart
+                    
+                    for _, descendant in ipairs(stageFolder:GetDescendants()) do
+                        if descendant:IsA("TouchInterest") and descendant.Parent ~= winBlock then
+                            descendant:Destroy()
+                        end
+                        
+                        if descendant:IsA("BasePart") and descendant ~= winBlock then
+                            descendant.CanCollide = false
+                        end
+                    end
+                    
+                    local path = PathfindingService:CreatePath({
+                        AgentRadius = 3,
+                        AgentHeight = 6,
+                        AgentCanJump = true
+                    })
+                    
+                    path:ComputeAsync(hrp.Position, winBlock.Position)
+                    
+                    if path.Status == Enum.PathStatus.Success then
+                        local waypoints = path:GetWaypoints()
+                        
+                        for _, waypoint in ipairs(waypoints) do
+                            if not env.Farming or env.WinStage ~= currentStageNum then break end
+                            
+                            if waypoint.Action == Enum.PathWaypointAction.Jump then
+                                humanoid.Jump = true
+                            end
+                            
+                            humanoid:MoveTo(waypoint.Position)
+                            
+                            local completed = false
+                            local connection
+                            connection = humanoid.MoveToFinished:Connect(function()
+                                completed = true
+                                connection:Disconnect()
+                            end)
+                            
+                            local startTime = os.clock()
+                            while not completed and (os.clock() - startTime) < 4 do
+                                task.wait(0.05)
+                                if not env.Farming then break end
+                            end
+                            if connection then connection:Disconnect() end
+                        end
+                    else
+                        humanoid:MoveTo(winBlock.Position)
+                        humanoid.Humanoid.MoveToFinished:Wait()
+                    end
+                    
                     task.wait(1)
-                    return
-                end
-
-                plr.Character.Humanoid:MoveTo(Vector3.new(1, 77, 817))
-                plr.Character.Humanoid.MoveToFinished:Wait()
-                plr.Character.Humanoid:MoveTo(Vector3.new(1, 77, 1042))
-                plr.Character.Humanoid.MoveToFinished:Wait()
-                if env.WinStage == 4 then
-                    plr.Character.Humanoid:MoveTo(workspace.Structure.Stage5.WinBlock4.Position)
-                    plr.Character.Humanoid.MoveToFinished:Wait()
+                else
                     task.wait(1)
-                    return
-                end
-
-                plr.Character.Humanoid:MoveTo(Vector3.new(2, 77, 1363))
-                plr.Character.Humanoid.MoveToFinished:Wait()
-                if env.WinStage == 5 then
-                    plr.Character.Humanoid:MoveTo(workspace.Structure.Stage6.WinBlock5.Position)
-                    plr.Character.Humanoid.MoveToFinished:Wait()
-                    task.wait(1)
-                    return
                 end
             end)
+            task.wait(0.1)
         end
     end)
-
 end
