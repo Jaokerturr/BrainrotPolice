@@ -7,7 +7,6 @@ local exservice = game:GetService("ExperienceService")
 local tweenservice = game:GetService("TweenService")
 
 local ui = import("rbxassetid://75281832304062")
-
 ui.Parent = hui and hui() or coregui
 
 local ToggleButton = ui.togglebtn
@@ -19,55 +18,35 @@ local TabList = MainFrame.tablist
 
 local HideButton = Topbar.hidebtn
 
-local CloseButton = Instance.new("TextButton")
-CloseButton.Name = "closebtn"
-CloseButton.Text = "Close UI"
-CloseButton.Size = UDim2.new(0, 60, HideButton.Size.Y.Scale, HideButton.Size.Y.Offset)
-CloseButton.Position = UDim2.new(HideButton.Position.X.Scale, HideButton.Position.X.Offset - 75, HideButton.Position.Y.Scale, HideButton.Position.Y.Offset)
-CloseButton.BackgroundTransparency = 1
-CloseButton.TextColor3 = HideButton.TextColor3
-CloseButton.Font = HideButton.Font
-CloseButton.TextSize = HideButton.TextSize
-CloseButton.BorderSizePixel = 0
-CloseButton.Parent = Topbar
-
+-- Perfectly spaced and matching fonts
 local Separator = Instance.new("TextLabel")
 Separator.Name = "uiseparator"
 Separator.Text = "|"
-Separator.Size = UDim2.new(0, 10, HideButton.Size.Y.Scale, HideButton.Size.Y.Offset)
-Separator.Position = UDim2.new(HideButton.Position.X.Scale, HideButton.Position.X.Offset - 15, HideButton.Position.Y.Scale, HideButton.Position.Y.Offset)
+Separator.Size = UDim2.new(0, 15, HideButton.Size.Y.Scale, HideButton.Size.Y.Offset)
+Separator.Position = UDim2.new(HideButton.Position.X.Scale, HideButton.Position.X.Offset - 30, HideButton.Position.Y.Scale, HideButton.Position.Y.Offset)
 Separator.BackgroundTransparency = 1
 Separator.TextColor3 = HideButton.TextColor3
 Separator.Font = HideButton.Font
 Separator.TextSize = HideButton.TextSize
-Separator.BorderSizePixel = 0
 Separator.Parent = Topbar
 
+local CloseButton = Instance.new("TextButton")
+CloseButton.Name = "closebtn"
+CloseButton.Text = "Close UI"
+CloseButton.Size = UDim2.new(0, 75, HideButton.Size.Y.Scale, HideButton.Size.Y.Offset)
+CloseButton.Position = UDim2.new(HideButton.Position.X.Scale, HideButton.Position.X.Offset - 110, HideButton.Position.Y.Scale, HideButton.Position.Y.Offset)
+CloseButton.BackgroundTransparency = 1
+CloseButton.TextColor3 = HideButton.TextColor3
+CloseButton.Font = HideButton.Font
+CloseButton.TextSize = HideButton.TextSize
+CloseButton.Parent = Topbar
+
 local Sections = {
-    Home = {
-        TabBtn = TabList.HomeTab,
-        Container = SectionContainers.homeframe
-    },
-
-    Game = {
-        TabBtn = TabList.GameTab,
-        Container = SectionContainers.gameFrame
-    },
-
-    GamesList = {
-        TabBtn = TabList.GameslistTab,
-        Container = SectionContainers.gamelistFrame
-    },
-
-    Settings = {
-        TabBtn = TabList.SettingsTab,
-        Container = SectionContainers.settingsFrame
-    },
-
-    Credits = {
-        TabBtn = TabList.CreditsTab,
-        Container = SectionContainers.creditsFrame
-    }
+    Home = { TabBtn = TabList.HomeTab, Container = SectionContainers.homeframe },
+    Game = { TabBtn = TabList.GameTab, Container = SectionContainers.gameFrame },
+    GamesList = { TabBtn = TabList.GameslistTab, Container = SectionContainers.gamelistFrame },
+    Settings = { TabBtn = TabList.SettingsTab, Container = SectionContainers.settingsFrame },
+    Credits = { TabBtn = TabList.CreditsTab, Container = SectionContainers.creditsFrame }
 }
 
 local CurSection
@@ -75,32 +54,23 @@ local CurSection
 for _, sect in pairs(Sections) do
     sect.TabBtn.MouseEnter:Connect(function()
         for _, stroke in pairs(sect.TabBtn:GetChildren()) do
-            if stroke.Name == "InnerShadow" then
-                stroke.Transparency = 0.95
-            end
+            if stroke.Name == "InnerShadow" then stroke.Transparency = 0.95 end
         end
     end)
-
     sect.TabBtn.MouseLeave:Connect(function()
         for _, stroke in pairs(sect.TabBtn:GetChildren()) do
-            if stroke.Name == "InnerShadow" then
-                stroke.Transparency = 1
-            end
+            if stroke.Name == "InnerShadow" then stroke.Transparency = 1 end
         end
     end)
-
     sect.TabBtn.MouseButton1Click:Connect(function()
         if CurSection == sect then return end
-
         if CurSection then
             CurSection.TabBtn.BackgroundTransparency = 1
             CurSection.Container:TweenPosition(UDim2.new(0.5, 0, 1, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2)
         end
-
         sect.TabBtn.BackgroundTransparency = 0
         sect.Container:TweenPosition(UDim2.new(0.5, 0, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2)
         sect.Container.Visible = true
-
         CurSection = sect
     end)
 end
@@ -128,11 +98,8 @@ MainFrame.InputBegan:Connect(function(input)
         dragging = true
         mousePos = input.Position
         framePos = MainFrame.Position
-
         input.Changed:Connect(function()
-            if input.UserInputState == Enum.UserInputState.End then
-                dragging = false
-            end
+            if input.UserInputState == Enum.UserInputState.End then dragging = false end
         end)
     end
 end)
@@ -146,12 +113,7 @@ end)
 userinputservice.InputChanged:Connect(function(input)
     if input == dragInput and dragging then
         local delta = input.Position - mousePos
-        MainFrame.Position = UDim2.new(
-            framePos.X.Scale,
-            framePos.X.Offset + delta.X,
-            framePos.Y.Scale,
-            framePos.Y.Offset + delta.Y
-        )
+        MainFrame.Position = UDim2.new(framePos.X.Scale, framePos.X.Offset + delta.X, framePos.Y.Scale, framePos.Y.Offset + delta.Y)
     end
 end)
 
@@ -168,9 +130,9 @@ end)
 local gameList = httpservice:JSONDecode(game:HttpGet(getgitpath("src") .. "gameslist.json" .. cacheBuster))
 local creditsList = httpservice:JSONDecode(game:HttpGet(getgitpath("src") .. "credits.json" .. cacheBuster))
 local elements = loadstring(game:HttpGet(getgitpath("src") .. "elements.lua" .. cacheBuster))()
+
 if not ok or #gamePath == 0 or gamePath == "404: Not Found" then
     local handledLocally = false
-
     if getgenv().FileScripts then
         if isfile("BrainrotPolice/"..tostring(game.PlaceId)..".lua") then
             local gameModule = loadstring(readfile("BrainrotPolice/"..tostring(game.PlaceId)..".lua"))()
@@ -178,18 +140,15 @@ if not ok or #gamePath == 0 or gamePath == "404: Not Found" then
             handledLocally = true
         end
     end
-
     if not handledLocally then
         elements:Unsupported(Sections.Game.Container, function()
             if CurSection then
                 CurSection.TabBtn.BackgroundTransparency = 1
                 CurSection.Container:TweenPosition(UDim2.new(0.5, 0, 1, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2)
             end
-
             Sections.GamesList.TabBtn.BackgroundTransparency = 0
             Sections.GamesList.Container:TweenPosition(UDim2.new(0.5, 0, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2)
             Sections.GamesList.Container.Visible = true
-
             CurSection = Sections.GamesList
         end)
     end
@@ -197,6 +156,7 @@ else
     local gameModule = loadstring(gamePath)()
     gameModule(Sections.Game.Container, httpservice:JSONDecode(readfile("BrainrotPolice/Config.json")))
 end
+
 elements:Searchbar(Sections.GamesList.Container)
 for _, g in ipairs(gameList) do
     elements:addGame(Sections.GamesList.Container, g["game"], g["status"], function()
@@ -206,7 +166,6 @@ end
 
 for sect, c in pairs(creditsList) do
     elements:CredHead(Sections.Credits.Container, sect)
-
     for _, person in ipairs(c) do
         elements:CredPerson(Sections.Credits.Container, person)
     end
