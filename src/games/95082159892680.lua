@@ -15,7 +15,7 @@ return function(section, data)
     data[tostring(game.PlaceId)] = setdata
     writefile("BrainrotPolice/Config.json", game:GetService("HttpService"):JSONEncode(data))
 
-    elements:Label("Currently supports up to 14 stages - By Jay", section)
+    elements:Label("Currently supports up to 14 stages - By thejaokertur", section)
 
     elements:Textbox("Win Stage", section, tostring(env.WinStage), function(v)
         local num = tonumber(v)
