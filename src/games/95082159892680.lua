@@ -16,7 +16,7 @@ return function(section, data)
 
     print("yeah")
 
-    elements:Label("supports all stages - By Jay", section)
+    elements:Label("Supports all stages - By Jay", section)
 
     elements:Textbox("Win Stage", section, tostring(env.WinStage), function(v)
         env.WinStage = tonumber(v)
@@ -59,7 +59,6 @@ return function(section, data)
                 
                 local stageFolder = structure:FindFirstChild(targetStageName)
                 if not stageFolder then
-                    warn("Target stage folder not found: " .. targetStageName)
                     task.wait(1)
                     return
                 end
@@ -124,10 +123,10 @@ return function(section, data)
                         end
                     else
                         humanoid:MoveTo(winBlock.Position)
-                        humanoid.Humanoid.MoveToFinished:Wait()
+                        humanoid.MoveToFinished:Wait()
                     end
                     
-                    task.wait(1)
+                    task.wait(0.5)
                 else
                     task.wait(1)
                 end
