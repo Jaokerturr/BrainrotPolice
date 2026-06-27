@@ -3,24 +3,33 @@ return function(section, data)
     local elements = loadstring(game:HttpGet(getgitpath("src").."elements.lua"))()
     local env = getgenv()
     local plr = game:GetService("Players").LocalPlayer
-    local PathfindingService = game:GetService("PathfindingService")
 
     env.Farming = false
     env.WinStage = 1
+    env.FastMode = false
 
     local setdata = data[tostring(game.PlaceId)] or {}
     setdata.farming = setdata.farming or false
     setdata.winstage = setdata.winstage or 1
+    setdata.fastmode = setdata.fastmode or false
     data[tostring(game.PlaceId)] = setdata
     writefile("BrainrotPolice/Config.json", game:GetService("HttpService"):JSONEncode(data))
 
     print("yeah")
 
-    elements:Label("Supports all stages - By Jay", section)
+    elements:Label("Supports World 1 (Stages 1-14)", section)
 
     elements:Textbox("Win Stage", section, tostring(env.WinStage), function(v)
-        env.WinStage = tonumber(v)
-        getgenv().setconfig("winstage", tonumber(v))
+        local num = tonumber(v)
+        if num and num <= 14 then
+            env.WinStage = num
+            getgenv().setconfig("winstage", num)
+        end
+    end)
+
+    elements:Toggle("Fast Mode", section, env.FastMode, function(v)
+        env.FastMode = v
+        getgenv().setconfig("fastmode", v)
     end)
 
     local part = Instance.new("Part")
@@ -37,9 +46,7 @@ return function(section, data)
 
         spawn(function()
             while env.Farming do
-                local args = {
-                    "Walking"
-                }
+                local args = { "Walking" }
                 game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("UpdateSpeed"):FireServer(unpack(args))
                 task.wait()
             end
@@ -47,91 +54,33 @@ return function(section, data)
 
         while env.Farming do
             pcall(function()
-                local currentStageNum = env.WinStage
-                local targetStageName = "Stage" .. tostring(currentStageNum + 1)
-                local winBlockName = "WinBlock" .. tostring(currentStageNum)
-                
-                local structure = workspace:FindFirstChild("Structure")
-                if not structure then 
-                    task.wait(1) 
-                    return 
-                end
-                
-                local stageFolder = structure:FindFirstChild(targetStageName)
-                if not stageFolder then
-                    task.wait(1)
-                    return
-                end
-                
-                local winBlock = stageFolder:FindFirstChild(winBlockName)
-                if not winBlock then
-                    for _, child in ipairs(stageFolder:GetChildren()) do
-                        if child.Name:find("WinBlock") then
-                            winBlock = child
-                            break
-                        end
-                    end
-                end
-                
-                if winBlock and winBlock:IsA("BasePart") and plr.Character and plr.Character:FindFirstChild("Humanoid") and plr.Character:FindFirstChild("HumanoidRootPart") then
-                    local humanoid = plr.Character.Humanoid
-                    local hrp = plr.Character.HumanoidRootPart
+                local char = plr.Character
+                if not char or not char:FindFirstChild("HumanoidRootPart") then return end
+
+                for i = 1, env.WinStage do
+                    if not env.Farming then break end
+
+                    local targetStageName = "Stage" .. tostring(i + 1)
+                    local winBlockName = "WinBlock" .. tostring(i)
                     
-                    for _, descendant in ipairs(stageFolder:GetDescendants()) do
-                        if descendant:IsA("TouchInterest") and descendant.Parent ~= winBlock then
-                            descendant:Destroy()
-                        end
-                        
-                        if descendant:IsA("BasePart") and descendant ~= winBlock then
-                            descendant.CanCollide = false
-                        end
-                    end
-                    
-                    local path = PathfindingService:CreatePath({
-                        AgentRadius = 3,
-                        AgentHeight = 6,
-                        AgentCanJump = true
-                    })
-                    
-                    path:ComputeAsync(hrp.Position, winBlock.Position)
-                    
-                    if path.Status == Enum.PathStatus.Success then
-                        local waypoints = path:GetWaypoints()
-                        
-                        for _, waypoint in ipairs(waypoints) do
-                            if not env.Farming or env.WinStage ~= currentStageNum then break end
+                    local stageFolder = workspace:FindFirstChild("Structure") and workspace.Structure:FindFirstChild(targetStageName)
+                    if stageFolder then
+                        local winBlock = stageFolder:FindFirstChild(winBlockName)
+                        if winBlock then
+                            -- Teleport character directly to the TouchInterest block
+                            char:PivotTo(winBlock.CFrame + Vector3.new(0, 1.5, 0))
                             
-                            if waypoint.Action == Enum.PathWaypointAction.Jump then
-                                humanoid.Jump = true
+                            -- Delay based on the Fast toggle
+                            if env.FastMode then
+                                task.wait(0.1)
+                            else
+                                task.wait(1.5)
                             end
-                            
-                            humanoid:MoveTo(waypoint.Position)
-                            
-                            local completed = false
-                            local connection
-                            connection = humanoid.MoveToFinished:Connect(function()
-                                completed = true
-                                connection:Disconnect()
-                            end)
-                            
-                            local startTime = os.clock()
-                            while not completed and (os.clock() - startTime) < 4 do
-                                task.wait(0.05)
-                                if not env.Farming then break end
-                            end
-                            if connection then connection:Disconnect() end
                         end
-                    else
-                        humanoid:MoveTo(winBlock.Position)
-                        humanoid.MoveToFinished:Wait()
                     end
-                    
-                    task.wait(0.5)
-                else
-                    task.wait(1)
                 end
             end)
-            task.wait(0.1)
+            task.wait(0.5)
         end
     end)
 end
