@@ -17,11 +17,11 @@ return function(section, data)
 
     print("yeah")
 
-    elements:Label("Supports World 1 (Stages 1-14)", section)
+    elements:Label("Currently supports up to 14 stages - By Jay", section)
 
     elements:Textbox("Win Stage", section, tostring(env.WinStage), function(v)
         local num = tonumber(v)
-        if num and num <= 14 then
+        if num then
             env.WinStage = num
             getgenv().setconfig("winstage", num)
         end
@@ -55,32 +55,50 @@ return function(section, data)
         while env.Farming do
             pcall(function()
                 local char = plr.Character
-                if not char or not char:FindFirstChild("HumanoidRootPart") then return end
+                local head = char and char:FindFirstChild("Head")
+                local hrp = char and char:FindFirstChild("HumanoidRootPart")
+                if not head or not hrp then return end
 
-                for i = 1, env.WinStage do
-                    if not env.Farming then break end
-
-                    local targetStageName = "Stage" .. tostring(i + 1)
-                    local winBlockName = "WinBlock" .. tostring(i)
-                    
-                    local stageFolder = workspace:FindFirstChild("Structure") and workspace.Structure:FindFirstChild(targetStageName)
-                    if stageFolder then
-                        local winBlock = stageFolder:FindFirstChild(winBlockName)
-                        if winBlock then
-                            -- Teleport character directly to the TouchInterest block
-                            char:PivotTo(winBlock.CFrame + Vector3.new(0, 1.5, 0))
-                            
-                            -- Delay based on the Fast toggle
-                            if env.FastMode then
-                                task.wait(0.1)
-                            else
-                                task.wait(1.5)
+                local currentStageNum = env.WinStage
+                local targetStageName = "Stage" .. tostring(currentStageNum + 1)
+                local winBlockName = "WinBlock" .. tostring(currentStageNum)
+                
+                local stageFolder = workspace:FindFirstChild("Structure") and workspace.Structure:FindFirstChild(targetStageName)
+                if stageFolder then
+                    local winBlock = stageFolder:FindFirstChild(winBlockName)
+                    if not winBlock then
+                        for _, child in ipairs(stageFolder:GetChildren()) do
+                            if child.Name:find("WinBlock") then
+                                winBlock = child
+                                break
                             end
+                        end
+                    end
+
+                    if winBlock then
+                        if firetouchinterest then
+                            -- Best method: Tricks the game into thinking your head touched it without moving you
+                            firetouchinterest(head, winBlock, 0)
+                            task.wait(0.05)
+                            firetouchinterest(head, winBlock, 1)
+                        else
+                            -- Fallback method: If firetouchinterest fails, bobs you up and down quickly
+                            local originalCFrame = hrp.CFrame
+                            hrp.CFrame = winBlock.CFrame * CFrame.new(0, 1, 0)
+                            task.wait(0.05)
+                            hrp.CFrame = winBlock.CFrame * CFrame.new(0, -1, 0)
+                            task.wait(0.05)
+                            hrp.CFrame = originalCFrame
                         end
                     end
                 end
             end)
-            task.wait(0.5)
+            
+            if env.FastMode then
+                task.wait(0.1)
+            else
+                task.wait(1.5)
+            end
         end
     end)
 end
