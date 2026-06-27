@@ -21,18 +21,27 @@ local HideButton = Topbar.hidebtn
 
 local CloseButton = Instance.new("TextButton")
 CloseButton.Name = "closebtn"
-CloseButton.Text = "X"
-CloseButton.Size = HideButton.Size
-CloseButton.Position = UDim2.new(HideButton.Position.X.Scale, HideButton.Position.X.Offset - 25, HideButton.Position.Y.Scale, HideButton.Position.Y.Offset)
-CloseButton.BackgroundColor3 = Color3.fromRGB(220, 53, 69)
-CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-CloseButton.Font = Enum.Font.GothamBold
-CloseButton.TextSize = 12
+CloseButton.Text = "Close UI"
+CloseButton.Size = UDim2.new(0, 60, HideButton.Size.Y.Scale, HideButton.Size.Y.Offset)
+CloseButton.Position = UDim2.new(HideButton.Position.X.Scale, HideButton.Position.X.Offset - 75, HideButton.Position.Y.Scale, HideButton.Position.Y.Offset)
+CloseButton.BackgroundTransparency = 1
+CloseButton.TextColor3 = HideButton.TextColor3
+CloseButton.Font = HideButton.Font
+CloseButton.TextSize = HideButton.TextSize
 CloseButton.BorderSizePixel = 0
-local corner = Instance.new("UICorner")
-corner.CornerRadius = UDim.new(0, 4)
-corner.Parent = CloseButton
 CloseButton.Parent = Topbar
+
+local Separator = Instance.new("TextLabel")
+Separator.Name = "uiseparator"
+Separator.Text = "|"
+Separator.Size = UDim2.new(0, 10, HideButton.Size.Y.Scale, HideButton.Size.Y.Offset)
+Separator.Position = UDim2.new(HideButton.Position.X.Scale, HideButton.Position.X.Offset - 15, HideButton.Position.Y.Scale, HideButton.Position.Y.Offset)
+Separator.BackgroundTransparency = 1
+Separator.TextColor3 = HideButton.TextColor3
+Separator.Font = HideButton.Font
+Separator.TextSize = HideButton.TextSize
+Separator.BorderSizePixel = 0
+Separator.Parent = Topbar
 
 local Sections = {
     Home = {
@@ -152,12 +161,13 @@ Sections.Home.Container.ythead.Text = Sections.Home.Container.ythead.Text:gsub("
 Sections.Home.Container.execLabel.Text = "Executor: " .. getexec()
 Sections.Home.Container.versionLabel.Text = "Version: 0.32 BETA"
 
+local cacheBuster = "?t=" .. tostring(os.time())
 local ok, gamePath = pcall(function()
-    return game:HttpGet(getgitpath("games") .. tostring(game.PlaceId) .. ".lua")
+    return game:HttpGet(getgitpath("games") .. tostring(game.PlaceId) .. ".lua" .. cacheBuster)
 end)
-local gameList = httpservice:JSONDecode(game:HttpGet(getgitpath("src").. "gameslist.json"))
-local creditsList = httpservice:JSONDecode(game:HttpGet(getgitpath("src").. "credits.json"))
-local elements = loadstring(game:HttpGet(getgitpath("src").."elements.lua"))()
+local gameList = httpservice:JSONDecode(game:HttpGet(getgitpath("src") .. "gameslist.json" .. cacheBuster))
+local creditsList = httpservice:JSONDecode(game:HttpGet(getgitpath("src") .. "credits.json" .. cacheBuster))
+local elements = loadstring(game:HttpGet(getgitpath("src") .. "elements.lua" .. cacheBuster))()
 if not ok or #gamePath == 0 or gamePath == "404: Not Found" then
     local handledLocally = false
 
