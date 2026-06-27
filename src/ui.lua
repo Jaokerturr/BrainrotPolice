@@ -18,27 +18,19 @@ local TabList = MainFrame.tablist
 
 local HideButton = Topbar.hidebtn
 
--- Perfectly spaced and matching fonts
-local Separator = Instance.new("TextLabel")
+-- Cloning the exact button so the font/style is identical
+local Separator = HideButton:Clone()
 Separator.Name = "uiseparator"
 Separator.Text = "|"
 Separator.Size = UDim2.new(0, 15, HideButton.Size.Y.Scale, HideButton.Size.Y.Offset)
-Separator.Position = UDim2.new(HideButton.Position.X.Scale, HideButton.Position.X.Offset - 30, HideButton.Position.Y.Scale, HideButton.Position.Y.Offset)
-Separator.BackgroundTransparency = 1
-Separator.TextColor3 = HideButton.TextColor3
-Separator.Font = HideButton.Font
-Separator.TextSize = HideButton.TextSize
+Separator.Position = UDim2.new(HideButton.Position.X.Scale, HideButton.Position.X.Offset - 25, HideButton.Position.Y.Scale, HideButton.Position.Y.Offset)
 Separator.Parent = Topbar
 
-local CloseButton = Instance.new("TextButton")
+local CloseButton = HideButton:Clone()
 CloseButton.Name = "closebtn"
 CloseButton.Text = "Close UI"
 CloseButton.Size = UDim2.new(0, 75, HideButton.Size.Y.Scale, HideButton.Size.Y.Offset)
-CloseButton.Position = UDim2.new(HideButton.Position.X.Scale, HideButton.Position.X.Offset - 110, HideButton.Position.Y.Scale, HideButton.Position.Y.Offset)
-CloseButton.BackgroundTransparency = 1
-CloseButton.TextColor3 = HideButton.TextColor3
-CloseButton.Font = HideButton.Font
-CloseButton.TextSize = HideButton.TextSize
+CloseButton.Position = UDim2.new(HideButton.Position.X.Scale, HideButton.Position.X.Offset - 100, HideButton.Position.Y.Scale, HideButton.Position.Y.Offset)
 CloseButton.Parent = Topbar
 
 local Sections = {
